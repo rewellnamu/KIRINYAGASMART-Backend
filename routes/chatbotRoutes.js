@@ -1,18 +1,24 @@
 // routes/chatbotRoutes.js
 const express = require('express');
 const router = express.Router();
+const OpenAI = require('openai');
 
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-// Mock response for now
 router.post('/chat', async (req, res) => {
   const { question } = req.body;
 
   try {
-    // TODO: Replace with AI logic (OpenAI, Gemini, etc.)
-    const answer = `You asked: "${question}". This is a placeholder response.`;
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini", // cheaper & fast, you can switch to gpt-4o
+      messages: [{ role: "user", content: question }],
+      max_tokens: 300
+    });
+
+    const answer = response.choices[0].message.content;
     res.json({ answer });
   } catch (error) {
-    console.error('Chatbot error:', error);
+    console.error("OpenAI API Error:", error);
     res.status(500).json({ answer: 'Sorry, something went wrong.' });
   }
 });
