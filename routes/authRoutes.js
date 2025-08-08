@@ -5,4 +5,5 @@ const { registerAdmin, loginAdmin } = require('../controllers/authController');
 router.post('/register', registerAdmin);  // Create initial admin
 router.post('/login', loginAdmin);
 
+
 module.exports = router;

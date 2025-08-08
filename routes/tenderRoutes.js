@@ -4,9 +4,9 @@ const { getTenders, createTender, getSingleTender, updateTender, deleteTender } 
 const { protect } = require('../middleware/authMiddleware');
 
 router.get('/', getTenders);
-router.post('/', protect, createTender);
+router.post('/', createTender);
 router.get('/:id', getSingleTender);
-router.put('/:id', protect, updateTender);
-router.delete('/:id', protect, deleteTender);
+router.put('/:id', updateTender);
+router.delete('/:id',  deleteTender);
 
 module.exports = router;

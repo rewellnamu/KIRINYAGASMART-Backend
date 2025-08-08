@@ -12,8 +12,16 @@ exports.createNews = async (req, res) => {
     const news = new News({ ...req.body, summary });
     await news.save();
 
-    // Notify all connected clients
-    req.app.get('io').emit('new-news', news);
+    // Emit a unified notification
+    const io = req.app.get('io');
+    if (io) {
+      io.emit('notification', {
+        message: `New news published: ${news.title}`,
+        date: new Date(),
+        type: 'news',
+        link: `/news/${news._id}`
+      });
+    }
 
     res.status(201).json(news);
   } catch (err) {

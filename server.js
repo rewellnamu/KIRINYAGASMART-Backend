@@ -16,11 +16,14 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: '*' } });
 
-// Socket connection
+// Make io available to controllers
+app.set('io', io);
+
 io.on('connection', (socket) => {
   console.log('Client connected:', socket.id);
   socket.on('disconnect', () => console.log('Client disconnected:', socket.id));
 });
+
 
 // Middleware
 app.use(express.json());
@@ -36,6 +39,7 @@ app.use('/api/tenders', require('./routes/tenderRoutes'));
 app.use('/api/contacts', require('./routes/contactRoutes'));
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/ai', require('./routes/chatbotRoutes')); // <-- Add this line
+
 
 
 // Make io available to routes

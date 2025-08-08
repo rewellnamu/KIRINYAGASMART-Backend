@@ -8,6 +8,18 @@ exports.getProjects = async (req, res) => {
 exports.createProject = async (req, res) => {
   const project = new Project(req.body);
   await project.save();
+
+  // Emit a unified notification
+  const io = req.app.get('io');
+  if (io) {
+    io.emit('notification', {
+      message: `New project added: ${project.name}`,
+      date: new Date(),
+      type: 'project',
+      link: `/projects/${project._id}`
+    });
+  }
+
   res.status(201).json(project);
 };
 
@@ -25,11 +37,4 @@ exports.updateProject = async (req, res) => {
 exports.deleteProject = async (req, res) => {
   await Project.findByIdAndDelete(req.params.id);
   res.json({ message: 'Project deleted' });
-};
-
-exports.createProject = async (req, res) => {
-  const project = new Project(req.body);
-  await project.save();
-  req.app.get('io').emit('new-project', project);
-  res.status(201).json(project);
 };

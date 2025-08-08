@@ -4,9 +4,9 @@ const { getNews, createNews, getSingleNews, updateNews, deleteNews } = require('
 const { protect } = require('../middleware/authMiddleware');
 
 router.get('/', getNews);
-router.post('/', protect, createNews);
+router.post('/', createNews);
 router.get('/:id', getSingleNews);
-router.put('/:id', protect, updateNews);
-router.delete('/:id', protect, deleteNews);
+router.put('/:id',updateNews);
+router.delete('/:id',deleteNews);
 
 module.exports = router;

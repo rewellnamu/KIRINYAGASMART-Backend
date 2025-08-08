@@ -8,6 +8,18 @@ exports.getTenders = async (req, res) => {
 exports.createTender = async (req, res) => {
   const tender = new Tender(req.body);
   await tender.save();
+
+  // Emit a unified notification
+  const io = req.app.get('io');
+  if (io) {
+    io.emit('notification', {
+      message: `New tender available: ${tender.title}`,
+      date: new Date(),
+      type: 'tender',
+      link: `/tenders/${tender._id}`
+    });
+  }
+
   res.status(201).json(tender);
 };
 
@@ -25,11 +37,4 @@ exports.updateTender = async (req, res) => {
 exports.deleteTender = async (req, res) => {
   await Tender.findByIdAndDelete(req.params.id);
   res.json({ message: 'Tender deleted' });
-};
-
-exports.createTender = async (req, res) => {
-  const tender = new Tender(req.body);
-  await tender.save();
-  req.app.get('io').emit('new-tender', tender);
-  res.status(201).json(tender);
 };

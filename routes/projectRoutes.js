@@ -4,9 +4,9 @@ const { getProjects, createProject, getSingleProject, updateProject, deleteProje
 const { protect } = require('../middleware/authMiddleware');
 
 router.get('/', getProjects);
-router.post('/', protect, createProject);
+router.post('/',  createProject);
 router.get('/:id', getSingleProject);
-router.put('/:id', protect, updateProject);
-router.delete('/:id', protect, deleteProject);
+router.put('/:id',  updateProject);
+router.delete('/:id', deleteProject);
 
 module.exports = router;
